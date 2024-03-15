@@ -24,10 +24,10 @@ import (
 	"time"
 	"unsafe"
 
-	"golang.org/x/sys/unix"
 	"github.com/amnezia-vpn/amneziawg-go/conn"
 	"github.com/amnezia-vpn/amneziawg-go/device"
 	"github.com/amnezia-vpn/amneziawg-go/tun"
+	"golang.org/x/sys/unix"
 )
 
 var loggerFunc unsafe.Pointer
@@ -107,7 +107,7 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 		return -1
 	}
 	logger.Verbosef("Attaching to interface")
-	dev := device.NewDevice(tun, conn.NewStdNetBind(), logger)
+	dev := device.NewDevice(tun, conn.NewStdNetBind(), logger, false)
 
 	err = dev.IpcSet(C.GoString(settings))
 	if err != nil {
