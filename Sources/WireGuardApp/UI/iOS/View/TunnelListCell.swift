@@ -27,6 +27,13 @@ class TunnelListCell: UITableViewCell {
     }
     var onSwitchToggled: ((Bool) -> Void)?
 
+    let segmentedControl: UISegmentedControl = {
+        let segmentedControl: UISegmentedControl = .init()
+        segmentedControl.insertSegment(withTitle: "Off", at: 0, animated: false)
+        segmentedControl.insertSegment(withTitle: "On", at: 0, animated: false)
+        return segmentedControl
+    }()
+
     let nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.font = UIFont.preferredFont(forTextStyle: .body)
@@ -52,7 +59,7 @@ class TunnelListCell: UITableViewCell {
         return busyIndicator
     }()
 
-    let statusSwitch = UISwitch()
+//    let statusSwitch = UISwitch()
 
     private var nameObservationToken: NSKeyValueObservation?
     private var statusObservationToken: NSKeyValueObservation?
@@ -67,7 +74,7 @@ class TunnelListCell: UITableViewCell {
 
         accessoryType = .disclosureIndicator
 
-        for subview in [statusSwitch, busyIndicator, onDemandLabel, nameLabel] {
+        for subview in [segmentedControl, busyIndicator, onDemandLabel, nameLabel] {
             subview.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(subview)
         }
@@ -80,14 +87,14 @@ class TunnelListCell: UITableViewCell {
         nameLabelBottomConstraint.priority = .defaultLow
 
         NSLayoutConstraint.activate([
-            statusSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            statusSwitch.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
-            statusSwitch.leadingAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.trailingAnchor, multiplier: 1),
-            statusSwitch.leadingAnchor.constraint(equalToSystemSpacingAfter: onDemandLabel.trailingAnchor, multiplier: 1),
+            segmentedControl.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            segmentedControl.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            segmentedControl.leadingAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.trailingAnchor, multiplier: 1),
+            segmentedControl.leadingAnchor.constraint(equalToSystemSpacingAfter: onDemandLabel.trailingAnchor, multiplier: 1),
 
             nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 1),
             nameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.layoutMarginsGuide.leadingAnchor, multiplier: 1),
-            nameLabel.trailingAnchor.constraint(lessThanOrEqualTo: statusSwitch.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(lessThanOrEqualTo: segmentedControl.leadingAnchor),
             nameLabelBottomConstraint,
 
             onDemandLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -97,7 +104,8 @@ class TunnelListCell: UITableViewCell {
             busyIndicator.leadingAnchor.constraint(greaterThanOrEqualToSystemSpacingAfter: nameLabel.trailingAnchor, multiplier: 1)
         ])
 
-        statusSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
+        segmentedControl.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
+//        statusSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -111,11 +119,11 @@ class TunnelListCell: UITableViewCell {
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        statusSwitch.isEnabled = !editing
+        segmentedControl.isEnabled = !editing
     }
 
     @objc private func switchToggled() {
-        onSwitchToggled?(statusSwitch.isOn)
+        onSwitchToggled?(segmentedControl.selectedSegmentIndex == 0)
     }
 
     private func update(from tunnel: TunnelContainer?, animated: Bool) {
@@ -127,20 +135,25 @@ class TunnelListCell: UITableViewCell {
         let isOnDemandEngaged = tunnel.isActivateOnDemandEnabled
 
         let shouldSwitchBeOn = ((status != .deactivating && status != .inactive) || isOnDemandEngaged)
-        statusSwitch.setOn(shouldSwitchBeOn, animated: true)
+        segmentedControl.selectedSegmentIndex = shouldSwitchBeOn ? 0 : 1
+//        statusSwitch.setOn(shouldSwitchBeOn, animated: true)
 
         if isOnDemandEngaged && !(status == .activating || status == .active) {
-            statusSwitch.onTintColor = UIColor.systemYellow
+            segmentedControl.selectedSegmentTintColor = .systemYellow
+//            statusSwitch.onTintColor = UIColor.systemYellow
         } else {
-            statusSwitch.onTintColor = UIColor.systemGreen
+            segmentedControl.selectedSegmentTintColor = .systemGreen
+//            statusSwitch.onTintColor = UIColor.systemGreen
         }
 
-        statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
+        segmentedControl.isUserInteractionEnabled = (status == .inactive || status == .active)
+//        statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
 
         if tunnel.hasOnDemandRules {
             onDemandLabel.text = isOnDemandEngaged ? tr("tunnelListCaptionOnDemand") : ""
             busyIndicator.stopAnimating()
-            statusSwitch.isUserInteractionEnabled = true
+            segmentedControl.isUserInteractionEnabled = true
+//            statusSwitch.isUserInteractionEnabled = true
         } else {
             onDemandLabel.text = ""
             if status == .inactive || status == .active {
@@ -148,15 +161,21 @@ class TunnelListCell: UITableViewCell {
             } else {
                 busyIndicator.startAnimating()
             }
-            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
+            segmentedControl.isUserInteractionEnabled = (status == .inactive || status == .active)
+//            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
         }
 
     }
 
     private func reset(animated: Bool) {
-        statusSwitch.thumbTintColor = nil
-        statusSwitch.setOn(false, animated: animated)
-        statusSwitch.isUserInteractionEnabled = false
+        segmentedControl.tintColor = nil
+        segmentedControl.selectedSegmentIndex = 1
+        segmentedControl.isUserInteractionEnabled = false
+
+//        statusSwitch.thumbTintColor = nil
+//        statusSwitch.setOn(false, animated: animated)
+//        statusSwitch.isUserInteractionEnabled = false
+
         busyIndicator.stopAnimating()
     }
 }

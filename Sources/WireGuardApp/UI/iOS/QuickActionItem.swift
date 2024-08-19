@@ -3,6 +3,7 @@
 
 import UIKit
 
+#if os(iOS)
 class QuickActionItem: UIApplicationShortcutItem {
     static let type = "AmneziaWGTunnelActivateAndShow"
 
@@ -23,3 +24,4 @@ class QuickActionItem: UIApplicationShortcutItem {
         return tunnelNames.map { QuickActionItem(tunnelName: $0) }
     }
 }
+#endif

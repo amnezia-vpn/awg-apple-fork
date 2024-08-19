@@ -8,3 +8,4 @@ DEVELOPMENT_TEAM = <team_id>
 // with Network Extensions capabilty.
 APP_ID_IOS = <app_id>
 APP_ID_MACOS = <app_id>
+APP_ID_TVOS = <app_id>

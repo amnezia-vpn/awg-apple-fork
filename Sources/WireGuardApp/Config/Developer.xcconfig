@@ -6,5 +6,6 @@ DEVELOPMENT_TEAM = X7UJ388FXK
 // The bundle identifier of the apps.
 // Should be an app id created at developer.apple.com
 // with Network Extensions capabilty.
-APP_ID_IOS = org.amnezia.awg
-APP_ID_MACOS = org.amnezia.awg
+APP_ID_IOS = org.amnezia.awg-ios
+APP_ID_MACOS = org.amnezia.awg-macos
+APP_ID_TVOS = org.amnezia.awg-macos

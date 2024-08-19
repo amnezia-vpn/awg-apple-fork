@@ -9,13 +9,13 @@ class SwitchCell: UITableViewCell {
         set(value) { textLabel?.text = value }
     }
     var isOn: Bool {
-        get { return switchView.isOn }
-        set(value) { switchView.isOn = value }
+        get { return segmentedControl.selectedSegmentIndex == 0 }
+        set(value) { segmentedControl.selectedSegmentIndex = value ? 0 : 1 }
     }
     var isEnabled: Bool {
-        get { return switchView.isEnabled }
+        get { return segmentedControl.isEnabled }
         set(value) {
-            switchView.isEnabled = value
+            segmentedControl.isEnabled = value
             textLabel?.textColor = value ? .label : .secondaryLabel
         }
     }
@@ -26,13 +26,22 @@ class SwitchCell: UITableViewCell {
     var isOnDemandEnabledObservationToken: AnyObject?
     var hasOnDemandRulesObservationToken: AnyObject?
 
-    let switchView = UISwitch()
+    let segmentedControl: UISegmentedControl = {
+        let segmentedControl: UISegmentedControl = .init()
+        segmentedControl.insertSegment(withTitle: "Off", at: 0, animated: false)
+        segmentedControl.insertSegment(withTitle: "On", at: 0, animated: false)
+        return segmentedControl
+    }()
+//    let switchView = UISwitch()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
 
-        accessoryView = switchView
-        switchView.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
+        accessoryView = segmentedControl
+        segmentedControl.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
+
+//        accessoryView = switchView
+//        switchView.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -40,7 +49,7 @@ class SwitchCell: UITableViewCell {
     }
 
     @objc func switchToggled() {
-        onSwitchToggled?(switchView.isOn)
+        onSwitchToggled?(segmentedControl.selectedSegmentIndex == 0)
     }
 
     override func prepareForReuse() {

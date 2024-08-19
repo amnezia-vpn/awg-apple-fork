@@ -159,12 +159,14 @@ class KeyValueCell: UITableViewCell {
         }
         guard recognizer.state == .recognized else { return }
 
+        #if os(iOS)
         if let recognizerView = recognizer.view,
             let recognizerSuperView = recognizerView.superview, recognizerView.becomeFirstResponder() {
             let menuController = UIMenuController.shared
             menuController.setTargetRect(detailTextLabel?.frame ?? recognizerView.frame, in: detailTextLabel?.superview ?? recognizerSuperView)
             menuController.setMenuVisible(true, animated: true)
         }
+        #endif
     }
 
     override var canBecomeFirstResponder: Bool {
@@ -176,7 +178,9 @@ class KeyValueCell: UITableViewCell {
     }
 
     override func copy(_ sender: Any?) {
+        #if os(iOS)
         UIPasteboard.general.string = valueTextField.text
+        #endif
     }
 
     override func prepareForReuse() {

@@ -14,6 +14,8 @@ enum ActivateOnDemandOption: Equatable {
 private let nonWiFiInterfaceType: NEOnDemandRuleInterfaceType = .cellular
 #elseif os(macOS)
 private let nonWiFiInterfaceType: NEOnDemandRuleInterfaceType = .ethernet
+#elseif os(tvOS)
+private let nonWiFiInterfaceType: NEOnDemandRuleInterfaceType = .ethernet
 #else
 #error("Unimplemented")
 #endif

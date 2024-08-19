@@ -15,9 +15,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Logger.configureGlobal(tagged: "APP", withFilePath: FileManager.logFileURL?.path)
 
         if let launchOptions = launchOptions {
+#if os(iOS)
             if launchOptions[.url] != nil || launchOptions[.shortcutItem] != nil {
                 isLaunchedForSpecificAction = true
             }
+#else
+            if launchOptions[.url] != nil {
+                isLaunchedForSpecificAction = true
+            }
+#endif
         }
 
         let window = UIWindow(frame: UIScreen.main.bounds)
@@ -41,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         mainVC?.refreshTunnelConnectionStatuses()
     }
 
+    #if os(iOS)
     func applicationWillResignActive(_ application: UIApplication) {
         guard let allTunnelNames = mainVC?.allTunnelNames() else { return }
         application.shortcutItems = QuickActionItem.createItems(allTunnelNames: allTunnelNames)
@@ -55,6 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         mainVC?.showTunnelDetailForTunnel(named: tunnelName, animated: false, shouldToggleStatus: true)
         completionHandler(true)
     }
+    #endif
+
 }
 
 extension AppDelegate {

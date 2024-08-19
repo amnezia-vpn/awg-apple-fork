@@ -263,7 +263,7 @@ public class WireGuardAdapter {
                     self.logEndpointResolutionResults(resolutionResults)
 
                     wgSetConfig(handle, wgConfig)
-                    #if os(iOS)
+                    #if os(iOS) || os(tvOS)
                     wgDisableSomeRoamingForBrokenMobileSemantics(handle)
                     #endif
 
@@ -377,7 +377,7 @@ public class WireGuardAdapter {
         if handle < 0 {
             throw WireGuardAdapterError.startWireGuardBackend(handle)
         }
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         wgDisableSomeRoamingForBrokenMobileSemantics(handle)
         #endif
         return handle
@@ -420,7 +420,7 @@ public class WireGuardAdapter {
         if case .started(let handle, _) = self.state {
             wgBumpSockets(handle)
         }
-        #elseif os(iOS)
+        #elseif os(iOS) || os(tvOS)
         switch self.state {
         case .started(let handle, let settingsGenerator):
             if path.status.isSatisfiable {

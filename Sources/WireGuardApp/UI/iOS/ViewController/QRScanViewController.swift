@@ -72,6 +72,7 @@ class QRScanViewController: UIViewController {
         }
     }
 
+#if os(iOS)
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -99,6 +100,7 @@ class QRScanViewController: UIViewController {
 
         previewLayer?.frame = view.bounds
     }
+#endif
 
     func scanDidComplete(withCode code: String) {
         let scannedTunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: code, called: "Scanned")

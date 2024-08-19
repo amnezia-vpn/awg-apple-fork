@@ -11,7 +11,11 @@ class MainViewController: UISplitViewController {
 
     init() {
         let detailVC = UIViewController()
+        #if os(iOS)
         detailVC.view.backgroundColor = .systemBackground
+        #else
+        detailVC.view.backgroundColor = .systemGray // TODO: Review this color
+        #endif
         let detailNC = UINavigationController(rootViewController: detailVC)
 
         let masterVC = TunnelsListTableViewController()

@@ -36,7 +36,7 @@ class Keychain {
                                     kSecValueData: value.data(using: .utf8) as Any,
                                     kSecReturnPersistentRef: true]
 
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         items[kSecAttrAccessGroup] = FileManager.appGroupId
         items[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlock
         #elseif os(macOS)

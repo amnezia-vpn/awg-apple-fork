@@ -102,8 +102,10 @@ class SettingsTableViewController: UITableViewController {
                     return
                 }
 
+                #if os(iOS)
                 let fileExportVC = UIDocumentPickerViewController(url: destinationURL, in: .exportToService)
                 self?.present(fileExportVC, animated: true, completion: nil)
+                #endif
             }
         }
     }

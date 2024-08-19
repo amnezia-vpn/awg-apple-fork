@@ -334,12 +334,15 @@ extension TunnelDetailTableViewController {
             let isOnDemandEngaged = tunnel.isActivateOnDemandEnabled
 
             let isSwitchOn = (status == .activating || status == .active || isOnDemandEngaged)
-            cell.switchView.setOn(isSwitchOn, animated: true)
+            cell.segmentedControl.selectedSegmentIndex = isSwitchOn ? 0 : 1
+//            cell.switchView.setOn(isSwitchOn, animated: true)
 
             if isOnDemandEngaged && !(status == .activating || status == .active) {
-                cell.switchView.onTintColor = UIColor.systemYellow
+                cell.segmentedControl.selectedSegmentTintColor = .yellow
+//                cell.switchView.onTintColor = UIColor.systemYellow
             } else {
-                cell.switchView.onTintColor = UIColor.systemGreen
+                cell.segmentedControl.selectedSegmentTintColor = .green
+//                cell.switchView.onTintColor = UIColor.systemGreen
             }
 
             var text: String
@@ -362,10 +365,10 @@ extension TunnelDetailTableViewController {
 
             if tunnel.hasOnDemandRules {
                 text += isOnDemandEngaged ? tr("tunnelStatusAddendumOnDemand") : ""
-                cell.switchView.isUserInteractionEnabled = true
+                cell.segmentedControl.isUserInteractionEnabled = true
                 cell.isEnabled = true
             } else {
-                cell.switchView.isUserInteractionEnabled = (status == .inactive || status == .active)
+                cell.segmentedControl.isUserInteractionEnabled = (status == .inactive || status == .active)
                 cell.isEnabled = (status == .inactive || status == .active)
             }
 

@@ -19,7 +19,9 @@ class TunnelsListTableViewController: UIViewController {
         let tableView = UITableView(frame: CGRect.zero, style: .plain)
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableView.automaticDimension
+#if os(iOS)
         tableView.separatorStyle = .none
+#endif
         tableView.register(TunnelListCell.self)
         return tableView
     }()
@@ -47,7 +49,9 @@ class TunnelsListTableViewController: UIViewController {
 
     override func loadView() {
         view = UIView()
+        #if os(iOS)
         view.backgroundColor = .systemBackground
+        #endif
 
         tableView.dataSource = self
         tableView.delegate = self
@@ -172,7 +176,9 @@ class TunnelsListTableViewController: UIViewController {
 
         let settingsVC = SettingsTableViewController(tunnelsManager: tunnelsManager)
         let settingsNC = UINavigationController(rootViewController: settingsVC)
+#if os(iOS)
         settingsNC.modalPresentationStyle = .formSheet
+#endif
         present(settingsNC, animated: true)
     }
 
@@ -184,10 +190,12 @@ class TunnelsListTableViewController: UIViewController {
     }
 
     func presentViewControllerForFileImport() {
+#if os(iOS)
         let documentTypes = ["com.wireguard.config.quick", String(kUTTypeText), String(kUTTypeZipArchive)]
         let filePicker = UIDocumentPickerViewController(documentTypes: documentTypes, in: .import)
         filePicker.delegate = self
         present(filePicker, animated: true)
+#endif
     }
 
     func presentViewControllerForScanningQRCode() {
@@ -272,12 +280,14 @@ class TunnelsListTableViewController: UIViewController {
     }
 }
 
+#if os(iOS)
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard let tunnelsManager = tunnelsManager else { return }
         TunnelImporter.importFromFile(urls: urls, into: tunnelsManager, sourceVC: self, errorPresenterType: ErrorPresenter.self)
     }
 }
+#endif
 
 extension TunnelsListTableViewController: QRScanViewControllerDelegate {
     func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController,
@@ -346,6 +356,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
         }
     }
 
+#if os(iOS)
     func tableView(_ tableView: UITableView,
                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: tr("tunnelsListSwipeDeleteButtonTitle")) { [weak self] _, _, completionHandler in
@@ -374,6 +385,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
             tableState = .normal
         }
     }
+#endif
 }
 
 extension TunnelsListTableViewController: TunnelsManagerListDelegate {
@@ -398,7 +410,9 @@ extension TunnelsListTableViewController: TunnelsManagerListDelegate {
                 (splitViewController.viewControllers[0] as? UINavigationController)?.popToRootViewController(animated: false)
             } else {
                 let detailVC = UIViewController()
+#if os(iOS)
                 detailVC.view.backgroundColor = .systemBackground
+#endif
                 let detailNC = UINavigationController(rootViewController: detailVC)
                 splitViewController.showDetailViewController(detailNC, sender: self)
             }

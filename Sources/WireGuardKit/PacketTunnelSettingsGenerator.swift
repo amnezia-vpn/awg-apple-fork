@@ -130,7 +130,7 @@ class PacketTunnelSettingsGenerator {
          * add a nob, maybe, or iOS will do probing for us.
          */
         if mtu == 0 {
-            #if os(iOS)
+            #if os(iOS) || os(tvOS)
             networkSettings.mtu = NSNumber(value: 1280)
             #elseif os(macOS)
             networkSettings.tunnelOverheadBytes = 80

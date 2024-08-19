@@ -10,6 +10,8 @@ extension FileManager {
         let appGroupIdInfoDictionaryKey = "com.wireguard.ios.app_group_id"
         #elseif os(macOS)
         let appGroupIdInfoDictionaryKey = "com.wireguard.macos.app_group_id"
+        #elseif os(tvOS)
+        let appGroupIdInfoDictionaryKey = "com.wireguard.tvos.app_group_id"
         #else
         #error("Unimplemented")
         #endif

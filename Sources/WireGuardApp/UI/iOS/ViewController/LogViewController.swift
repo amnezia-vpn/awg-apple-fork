@@ -7,7 +7,9 @@ class LogViewController: UIViewController {
 
     let textView: UITextView = {
         let textView = UITextView()
+#if os(iOS)
         textView.isEditable = false
+#endif
         textView.isSelectable = true
         textView.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
         textView.adjustsFontForContentSizeCategory = true
@@ -35,7 +37,9 @@ class LogViewController: UIViewController {
 
     override func loadView() {
         view = UIView()
+#if os(iOS)
         view.backgroundColor = .systemBackground
+#endif
         view.addSubview(textView)
         textView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -81,7 +85,11 @@ class LogViewController: UIViewController {
             let bodyFont = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
             let captionFont = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
             for logEntry in fetchedLogEntries {
+#if os(iOS)
                 let bgColor: UIColor = self.isNextLineHighlighted ? .systemGray3 : .systemBackground
+#else
+                let bgColor: UIColor = self.isNextLineHighlighted ? .lightGray : .darkGray // TODO: Review this color
+#endif
                 let fgColor: UIColor = .label
                 let timestampText = NSAttributedString(string: logEntry.timestamp + "\n", attributes: [.font: captionFont, .backgroundColor: bgColor, .foregroundColor: fgColor, .paragraphStyle: self.paragraphStyle])
                 let messageText = NSAttributedString(string: logEntry.message + "\n", attributes: [.font: bodyFont, .backgroundColor: bgColor, .foregroundColor: fgColor, .paragraphStyle: self.paragraphStyle])
@@ -132,6 +140,7 @@ class LogViewController: UIViewController {
                     ErrorPresenter.showErrorAlert(title: tr("alertUnableToWriteLogTitle"), message: tr("alertUnableToWriteLogMessage"), from: self)
                     return
                 }
+                #if os(iOS)
                 let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
                 if let sender = sender as? UIBarButtonItem {
                     activityVC.popoverPresentationController?.barButtonItem = sender
@@ -141,6 +150,7 @@ class LogViewController: UIViewController {
                     _ = FileManager.deleteFile(at: destinationURL)
                 }
                 self.present(activityVC, animated: true)
+                #endif
             }
         }
     }

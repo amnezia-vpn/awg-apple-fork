@@ -792,7 +792,7 @@ private func prettyTime(secondsLeft: Int64) -> String {
     let minutes = left / 60
     let seconds = left % 60
 
-    #if os(iOS)
+    #if os(iOS) || os(tvOS)
     if years > 0 {
         return years == 1 ? tr(format: "tunnelHandshakeTimestampYear (%d)", years) : tr(format: "tunnelHandshakeTimestampYears (%d)", years)
     }
