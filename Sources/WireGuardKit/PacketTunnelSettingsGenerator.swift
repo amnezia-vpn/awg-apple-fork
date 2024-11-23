@@ -133,12 +133,17 @@ class PacketTunnelSettingsGenerator {
             #if os(iOS)
             networkSettings.mtu = NSNumber(value: 1280)
             #elseif os(macOS)
+            networkSettings.mtu = NSNumber(value: 1500)
             networkSettings.tunnelOverheadBytes = 80
             #else
             #error("Unimplemented")
             #endif
         } else {
-            networkSettings.mtu = NSNumber(value: mtu)
+            if mtu >= 576 && mtu <= 1500 {
+                networkSettings.mtu = NSNumber(value: mtu)
+            } else {
+                networkSettings.mtu = NSNumber(value: 1280)
+            }
         }
 
         let (ipv4Addresses, ipv6Addresses) = addresses()
