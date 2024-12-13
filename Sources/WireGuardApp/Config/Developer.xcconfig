@@ -1,7 +1,7 @@
 // Developer.xcconfig
 
 // You Apple developer account's Team ID
-DEVELOPMENT_TEAM = X7UJ388FXK
+DEVELOPMENT_TEAM = KU5NAU9B7H
 
 // The bundle identifier of the apps.
 // Should be an app id created at developer.apple.com
